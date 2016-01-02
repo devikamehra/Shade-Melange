@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+group = 'com.github.devikamehra'
 
 android {
     compileSdkVersion 23
@@ -24,3 +27,4 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'net.steamcrafted:materialiconlib:1.0.7'
 }
+
