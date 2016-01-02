@@ -38,11 +38,10 @@ Just like another fragment, this fragment can be attached to your activity by us
 ShadeMelangeFragment fragment = new ShadeMelangeFragment();
 
         fragment.with(this)
-                .columns(2)                                            // set the number of columns you wish to have in the grid 
-                .setTextColor(Color.RED)                               // set the color of the name of the colours
-                .applyDecoration(DecorationEnum.SIMPLE_GRID_DECORATION) // set the simple recyclerview decoration. 
-                                                                        // You can apply your own customized decoration as well  
-                .showRectangularShell(true)                             // Shade Melange is available in circular (by default) and                                                                             // rectangular shell.
+                .columns(2)                                            // gridview columns
+                .setTextColor(Color.RED)                               // name of the colour textColor
+                .applyDecoration(DecorationEnum.SIMPLE_GRID_DECORATION) // recyclerview item decoration. Can be customized. 
+                .showRectangularShell(true)                             // Shape of shell (Circular or Rectangular)  
                 .setOnShadeSelectListener(new OnShadeSelectedListener() { // onClickShades Listener 
                     @Override
                     public void onShadeSelected(int color, String name) {
@@ -68,9 +67,7 @@ ShadeMelangeDialog dialog = new ShadeMelangeDialog(this);
                     .setOnShadeSelectListener(new OnShadeSelectedListener() {    // onShadeClick Listener
                         @Override
                         public void onShadeSelected(int color, String name) {
-
                             Toast.makeText(MainActivity.this, "You selected " + name + " shade.", Toast.LENGTH_SHORT).show();
-
                         }
                     })
                     .setPositiveButton("Select", new OnDialogButtonClickListener() {      // add various buttons 
@@ -80,21 +77,13 @@ ShadeMelangeDialog dialog = new ShadeMelangeDialog(this);
                             Toast.makeText(getBaseContext(), "Shade Selected!!", Toast.LENGTH_SHORT).show();
 
                         }
-                    })
-
-                    .setNegativeButton("Cancel", new OnDialogButtonClickListener() {
-                        @Override
-                        public void onButtonClicked(ShadeMelangeDialog shadeMelangeDialog) {
-
-                            Toast.makeText(getBaseContext(), "Dialog Cancelled", Toast.LENGTH_SHORT).show();
-
-                        }
                     });
+                    
             dialog.showMelange();       // Remember to use showMelange() and not the default show()
 
 ```
 
-Refer to the sample to appreciate the simplistic implementation of the library
+Refer to the sample to appreciate the simplistic implementation of the library.
 
 ## License
 
