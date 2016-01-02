@@ -3,7 +3,10 @@
 Shade Melange is a library that contains a colour palette with a wide range of pre-defined colours with their names. The implementation of the grid has been done using RecyclerView for memory efficient performance. The library consists of two main classes:
 
 * ShadeMelangeFragment.java - Fragment that can be used directly by attaching it with your activity.
+    <img src="https://github.com/devikamehra/Shade-Melange/blob/master/ScreenShots/Screenshot_2016-01-01-15-31-21.jpg?raw=true"           width="250">
+
 * ShadeMelangeDialog.java - Dialog that beyond it's basic implementation contains a colour palatte.
+    <img src="https://github.com/devikamehra/Shade-Melange/blob/master/ScreenShots/Screenshot_2016-01-01-15-31-32.jpg?raw=true"           width="250">
 
 ## Including in your project
 
