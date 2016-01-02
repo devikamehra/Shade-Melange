@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Shade-melange by devikamehra</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Shade-melange</h1>
+        <p>A simple way to add colour palette to your android projects.</p>
+
+        <p class="view"><a href="https://github.com/devikamehra/Shade-Melange">View the Project on GitHub <small>devikamehra/Shade-Melange</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/devikamehra/Shade-Melange/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/devikamehra/Shade-Melange/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/devikamehra/Shade-Melange">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="shade-melange" class="anchor" href="#shade-melange" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shade-Melange</h1>
+
+<p>Shade Melange is a library that contains a colour palette with a wide range of pre-defined colours with their names. The implementation of the grid has been done using RecyclerView for memory efficient performance. The library consists of two main classes:</p>
+
+<ul>
+<li>
+<p><strong>ShadeMelangeFragment.java</strong> - Fragment that can be used directly by attaching it with your activity.</p>
+
+<p><img src="https://github.com/devikamehra/Shade-Melange/blob/master/ScreenShots/Screenshot_2016-01-01-15-31-21.jpg?raw=true" width="250"></p>
+</li>
+<li>
+<p><strong>ShadeMelangeDialog.java</strong> - Dialog that beyond it's basic implementation contains a colour palatte.</p>
+
+<p><img src="https://github.com/devikamehra/Shade-Melange/blob/master/ScreenShots/Screenshot_2016-01-01-15-31-32.jpg?raw=true" width="250"></p>
+</li>
+</ul>
+
+<h2>
+<a id="including-in-your-project" class="anchor" href="#including-in-your-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Including in your project</h2>
+
+<p>Add JitPack to repositories in your project's root <code>build.gradle</code> file:</p>
+
+<pre><code>allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+</code></pre>
+
+<p>Add the dependency to your module's <code>build.gradle</code> file:</p>
+
+<pre><code>dependencies {
+    ...
+    compile 'com.github.devikamehra:Shade-Melange:v1.0'
+}
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h4>
+<a id="shademelangefragment" class="anchor" href="#shademelangefragment" aria-hidden="true"><span class="octicon octicon-link"></span></a>ShadeMelangeFragment</h4>
+
+<p>Just like another fragment, this fragment can be attached to your activity by using your default Fragment Manager</p>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-smi">ShadeMelangeFragment</span> fragment <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ShadeMelangeFragment</span>();
+
+        fragment<span class="pl-k">.</span>with(<span class="pl-v">this</span>)
+                .columns(<span class="pl-c1">2</span>)                                            <span class="pl-c">// gridview columns</span>
+                .setTextColor(<span class="pl-smi">Color</span><span class="pl-c1"><span class="pl-k">.</span>RED</span>)                               <span class="pl-c">// name of the colour textColor</span>
+                .applyDecoration(<span class="pl-smi">DecorationEnum</span><span class="pl-c1"><span class="pl-k">.</span>SIMPLE_GRID_DECORATION</span>) <span class="pl-c">// recyclerview item decoration. Can be customized. </span>
+                .showRectangularShell(<span class="pl-c1">true</span>)                             <span class="pl-c">// Shape of shell (Circular or Rectangular)  </span>
+                .setOnShadeSelectListener(<span class="pl-k">new</span> <span class="pl-smi">OnShadeSelectedListener</span>() { <span class="pl-c">// onClickShades Listener </span>
+                    <span class="pl-k">@Override</span>
+                    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onShadeSelected</span>(<span class="pl-k">int</span> <span class="pl-v">color</span>, <span class="pl-smi">String</span> <span class="pl-v">name</span>) {
+                        <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-smi">MainActivity</span><span class="pl-k">.</span><span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>You selected <span class="pl-pds">"</span></span> <span class="pl-k">+</span> name <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> shade.<span class="pl-pds">"</span></span> , <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_SHORT</span>)<span class="pl-k">.</span>show();
+                    }
+                });
+
+        getSupportFragmentManager()                                   <span class="pl-c">// easily add it using Fragment Manager</span>
+                .beginTransaction()
+                .add(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>container, fragment, <span class="pl-s"><span class="pl-pds">"</span>frag<span class="pl-pds">"</span></span>)
+                .commit();
+</pre></div>
+
+<h4>
+<a id="shademelangedialog" class="anchor" href="#shademelangedialog" aria-hidden="true"><span class="octicon octicon-link"></span></a>ShadeMelangeDialog</h4>
+
+<p>The Dialog contains a colour palatte which can be customized according to your specifications</p>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-smi">ShadeMelangeDialog</span> dialog <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ShadeMelangeDialog</span>(<span class="pl-v">this</span>);
+            dialog<span class="pl-k">.</span>title(<span class="pl-s"><span class="pl-pds">"</span>Shade Melange Dialog<span class="pl-pds">"</span></span>)
+                    .setOnShadeSelectListener(<span class="pl-k">new</span> <span class="pl-smi">OnShadeSelectedListener</span>() {    <span class="pl-c">// onShadeClick Listener</span>
+                        <span class="pl-k">@Override</span>
+                        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onShadeSelected</span>(<span class="pl-k">int</span> <span class="pl-v">color</span>, <span class="pl-smi">String</span> <span class="pl-v">name</span>) {
+                            <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(<span class="pl-smi">MainActivity</span><span class="pl-k">.</span><span class="pl-v">this</span>, <span class="pl-s"><span class="pl-pds">"</span>You selected <span class="pl-pds">"</span></span> <span class="pl-k">+</span> name <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> shade.<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_SHORT</span>)<span class="pl-k">.</span>show();
+                        }
+                    })
+                    .setPositiveButton(<span class="pl-s"><span class="pl-pds">"</span>Select<span class="pl-pds">"</span></span>, <span class="pl-k">new</span> <span class="pl-smi">OnDialogButtonClickListener</span>() {      <span class="pl-c">// add various buttons </span>
+                        <span class="pl-k">@Override</span>
+                        <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onButtonClicked</span>(<span class="pl-smi">ShadeMelangeDialog</span> <span class="pl-v">shadeMelangeDialog</span>) {
+
+                            <span class="pl-smi">Toast</span><span class="pl-k">.</span>makeText(getBaseContext(), <span class="pl-s"><span class="pl-pds">"</span>Shade Selected!!<span class="pl-pds">"</span></span>, <span class="pl-smi">Toast</span><span class="pl-c1"><span class="pl-k">.</span>LENGTH_SHORT</span>)<span class="pl-k">.</span>show();
+
+                        }
+                    });
+
+            dialog<span class="pl-k">.</span>showMelange();       <span class="pl-c">// Remember to use showMelange() and not the default show()</span>
+</pre></div>
+
+<p>Refer to the sample to appreciate the simplistic implementation of the library.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Copyright 2016 Devika Mehra</p>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+
+<p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/devikamehra">devikamehra</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
