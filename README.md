@@ -45,6 +45,7 @@ ShadeMelangeFragment fragment = new ShadeMelangeFragment();
                 .setTextColor(Color.RED)                               // name of the colour textColor
                 .applyDecoration(DecorationEnum.SIMPLE_GRID_DECORATION) // recyclerview item decoration. Can be customized. 
                 .showRectangularShell(true)                             // Shape of shell (Circular or Rectangular)  
+                .setSelectionMode(SelectionModeEnum.SINGLE_SELECTION_MODE) // To change selection mode from multi to single
                 .setOnShadeSelectListener(new OnShadeSelectedListener() { // onClickShades Listener 
                     @Override
                     public void onShadeSelected(int color, String name) {
