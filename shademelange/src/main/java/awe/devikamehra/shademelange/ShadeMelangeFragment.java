@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import awe.devikamehra.shademelange.Enum.DecorationEnum;
+import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
 import awe.devikamehra.shademelange.Enum.ShadeEnum;
 import awe.devikamehra.shademelange.Interface.OnShadeSelectedListener;
 import awe.devikamehra.shademelange.RecyclerViewUtil.RecyclerItemClickListener;
-import awe.devikamehra.shademelange.RecyclerViewUtil.ShadeAdapter;
 import awe.devikamehra.shademelange.RecyclerViewUtil.SimpleGridDecoration;
 
 
@@ -41,9 +40,11 @@ public class ShadeMelangeFragment extends Fragment {
     private ShadeAdapter shadeAdapter;
     private RecyclerView recyclerView;
     private boolean showRectangularShell = false;
-    private int decoration = -1;
+    private DecorationEnum decoration = DecorationEnum.NO_DECORATION;
     private RecyclerView.ItemDecoration itemDecoration = null;
     private int textColor = Color.BLACK;
+    private SelectionModeEnum selectionMode = SelectionModeEnum.MULTIPLE_SELECTION_MODE;
+    private ArrayList<Integer> selected = new ArrayList<>();
 
     public ShadeMelangeFragment with(Context context){
         this.context = context;
@@ -62,7 +63,7 @@ public class ShadeMelangeFragment extends Fragment {
         if (moreShades != null){
             this.moreShades = moreShades;
         }else{
-            Log.d("addMoreShades Method", "Cannot add null ArrayList of shades.");
+            throw new RuntimeException("Cannot add null ArrayList of shades.");
         }
         return this;
     }
@@ -72,7 +73,7 @@ public class ShadeMelangeFragment extends Fragment {
             this.moreShades = moreShades;
             this.addInStarting = addInStarting;
         }else{
-            Log.d("addMoreShades Method", "Cannot add null ArrayList of shades.");
+            throw new RuntimeException("Cannot add null ArrayList of shades.");
         }
         return this;
     }
@@ -81,7 +82,7 @@ public class ShadeMelangeFragment extends Fragment {
         if(replaceShades != null) {
             this.replaceShades = replaceShades;
         }else{
-            Log.d("replaceTheShades Method", "Cannot replace with empty ArrayList of shades");
+            throw new RuntimeException("Cannot replace with empty ArrayList of shades");
         }
         return this;
     }
@@ -92,7 +93,7 @@ public class ShadeMelangeFragment extends Fragment {
     }
 
     public ShadeMelangeFragment applyDecoration(DecorationEnum decorationEnum){
-        this.decoration = decorationEnum.getDecoration();
+        this.decoration = decorationEnum;
         return this;
     }
 
@@ -156,13 +157,15 @@ public class ShadeMelangeFragment extends Fragment {
 
         shadeAdapter.setTextColor(textColor);
 
+        shadeAdapter.setSelectionModeEnum(getSelectionMode());
+
         recyclerView.setAdapter(shadeAdapter);
 
-        if(decoration == DecorationEnum.SIMPLE_GRID_DECORATION.getDecoration()){
+        if(decoration == DecorationEnum.SIMPLE_GRID_DECORATION){
 
             recyclerView.addItemDecoration(new SimpleGridDecoration(getActivity()));
 
-        }else if(decoration == DecorationEnum.CUSTOM_DECORATION.getDecoration()){
+        }else if(decoration == DecorationEnum.CUSTOM_DECORATION){
 
             if (itemDecoration != null){
 
@@ -170,7 +173,7 @@ public class ShadeMelangeFragment extends Fragment {
 
             }else{
 
-                Log.e("Exception", "No Custom Item Decoration attached. Try again");
+                throw new RuntimeException("No Custom Item Decoration attached.");
 
             }
 
@@ -194,7 +197,6 @@ public class ShadeMelangeFragment extends Fragment {
 
     private void selectShade(int position) {
         ImageView shellSelected;
-        shadeAdapter.setSelected(position);
 
         for (int i = 0; i < shadeAdapter.getItemCount(); i++){
             if(recyclerView.getChildAt(i) != null) {
@@ -205,10 +207,47 @@ public class ShadeMelangeFragment extends Fragment {
             }
         }
 
-            GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-            View view = recyclerView.getChildAt(position - layoutManager.findFirstVisibleItemPosition());
-            view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
+        GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
 
+        if (getSelectionMode() == SelectionModeEnum.SINGLE_SELECTION_MODE) {
+
+            View view = recyclerView.getChildAt(position - layoutManager.findFirstVisibleItemPosition());
+
+            if (shadeAdapter.getSelectedShade() == position){
+                shadeAdapter.setSelectedShade(-1);
+
+                view.findViewById(R.id.shell_selected).setVisibility(View.INVISIBLE);
+
+            }else {
+                shadeAdapter.setSelectedShade(position);
+
+                view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
+
+            }
+
+        }else if(getSelectionMode() == SelectionModeEnum.MULTIPLE_SELECTION_MODE){
+
+            if(selected.contains(position)){
+                selected.remove((Integer) position);
+
+            }else {
+                selected.add(position);
+
+            }
+
+            shadeAdapter.setSelected(selected);
+
+            for(int item: shadeAdapter.getSelected()){
+
+                if(item >= layoutManager.findFirstVisibleItemPosition() && item <= layoutManager.findLastVisibleItemPosition()) {
+
+                    View view = recyclerView.getChildAt(item - layoutManager.findFirstVisibleItemPosition());
+                    view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
+
+                }
+            }
+
+        }
     }
 
     @Override
@@ -237,4 +276,36 @@ public class ShadeMelangeFragment extends Fragment {
         return this;
     }
 
+    public SelectionModeEnum getSelectionMode() {
+        return selectionMode;
+    }
+
+    public ShadeMelangeFragment setSelectionMode(SelectionModeEnum selectionMode) {
+        this.selectionMode = selectionMode;
+        return this;
+    }
+
+    public ArrayList<Shade> getListOfSelectedShades(){
+        if(getSelectionMode() == SelectionModeEnum.MULTIPLE_SELECTION_MODE) {
+            ArrayList<Shade> selectedShades = new ArrayList<>();
+            for (int item : shadeAdapter.getSelected()) {
+                selectedShades.add(shades.get(item));
+            }
+            return selectedShades;
+        }else{
+            throw new RuntimeException("Cannot return list of selected shades in single selection mode. Use getSelectedShade() method.");
+        }
+    }
+
+    public Shade getSelectedShade(){
+        if (getSelectionMode() == SelectionModeEnum.SINGLE_SELECTION_MODE){
+            if(shadeAdapter.getSelectedShade() != -1) {
+                return shades.get(shadeAdapter.getSelectedShade());
+            }else{
+                return null;
+            }
+        }else{
+            throw new RuntimeException("Cannot return a single shade in multi-selection mode. Use getListOfSelectedShades() method.");
+        }
+    }
 }

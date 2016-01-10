@@ -1,4 +1,4 @@
-package awe.devikamehra.shademelange.RecyclerViewUtil;
+package awe.devikamehra.shademelange;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -18,20 +18,21 @@ import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 
 import java.util.ArrayList;
 
-import awe.devikamehra.shademelange.R;
-import awe.devikamehra.shademelange.Shade;
+import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
 
 /**
  * Created by Devika on 23-12-2015.
  */
-public class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> {
+class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> {
 
     ArrayList<Shade> shades = new ArrayList<>();
     Context context;
-    int selected = -1;
+    ArrayList<Integer> selected = new ArrayList<>();
     ViewHolder viewHolder;
     boolean setRectShell = false;
     int textColor = Color.BLACK;
+    int selectedShade = -1;
+    private SelectionModeEnum selectionModeEnum = SelectionModeEnum.MULTIPLE_SELECTION_MODE;
 
     public boolean isRectShell() {
         return setRectShell;
@@ -69,15 +70,32 @@ public class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> 
 
         }
 
-        if(getSelected() == i){
+        if(selectionModeEnum == SelectionModeEnum.SINGLE_SELECTION_MODE){
 
-            viewHolder.selectedShell.setVisibility(View.VISIBLE);
+            if(getSelectedShade() == i){
 
-        }else {
+                viewHolder.selectedShell.setVisibility(View.VISIBLE);
 
-            viewHolder.selectedShell.setVisibility(View.GONE);
+            }else {
+
+                viewHolder.selectedShell.setVisibility(View.GONE);
+
+            }
+
+        }else if(selectionModeEnum == SelectionModeEnum.MULTIPLE_SELECTION_MODE){
+
+                if(getSelected().contains(i)){
+
+                    viewHolder.selectedShell.setVisibility(View.VISIBLE);
+
+                }else {
+
+                    viewHolder.selectedShell.setVisibility(View.GONE);
+
+                }
 
         }
+
         viewHolder.shadeName.setText(shades.get(i).getShadeName());
         viewHolder.shadeName.setTextColor(getTextColor());
         viewHolder.shadeName.setGravity(View.TEXT_ALIGNMENT_CENTER);
@@ -136,13 +154,15 @@ public class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> 
         return shades.size();
     }
 
-    public int getSelected() {
+    public ArrayList<Integer> getSelected() {
         return selected;
     }
 
-    public void setSelected(int selected) {
+    public void setSelected(ArrayList<Integer> selected) {
         this.selected = selected;
     }
+
+
 
     private Drawable tickDrawable(int color) {
         return MaterialDrawableBuilder.with(context)
@@ -160,6 +180,22 @@ public class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> 
         return textColor;
     }
 
+    public SelectionModeEnum getSelectionModeEnum() {
+        return selectionModeEnum;
+    }
+
+    public void setSelectionModeEnum(SelectionModeEnum selectionModeEnum) {
+        this.selectionModeEnum = selectionModeEnum;
+    }
+
+    public int getSelectedShade() {
+        return selectedShade;
+    }
+
+    public void setSelectedShade(int selectedShade) {
+        this.selectedShade = selectedShade;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView unselectedShell, selectedShell;
@@ -169,7 +205,6 @@ public class ShadeAdapter extends RecyclerView.Adapter<ShadeAdapter.ViewHolder> 
             super(itemView);
             unselectedShell = (ImageView) itemView.findViewById(R.id.shell);
             selectedShell = (ImageView) itemView.findViewById(R.id.shell_selected);
-            //selectedShell.setImageDrawable(tickDrawable(Color.BLACK));
             shadeName = (TextView) itemView.findViewById(R.id.shade_name);
             shadeName.setSingleLine(false);
         }

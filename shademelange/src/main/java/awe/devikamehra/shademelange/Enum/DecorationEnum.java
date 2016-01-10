@@ -5,18 +5,8 @@ package awe.devikamehra.shademelange.Enum;
  */
 public enum DecorationEnum {
 
-    NO_DECORATION(0),
-    SIMPLE_GRID_DECORATION(1),
-    CUSTOM_DECORATION(2);
+    NO_DECORATION,
+    SIMPLE_GRID_DECORATION,
+    CUSTOM_DECORATION;
 
-    int decoration;
-
-    DecorationEnum(int decoration){
-        this.decoration = decoration;
-    }
-
-    public int getDecoration(){
-        return decoration;
-    }
-    
 }

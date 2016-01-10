@@ -8,19 +8,18 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 import awe.devikamehra.shademelange.Enum.DecorationEnum;
+import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
 import awe.devikamehra.shademelange.Enum.ShadeEnum;
 import awe.devikamehra.shademelange.Interface.OnDialogButtonClickListener;
 import awe.devikamehra.shademelange.Interface.OnShadeMelangeDialogCancelListener;
 import awe.devikamehra.shademelange.Interface.OnShadeSelectedListener;
 import awe.devikamehra.shademelange.RecyclerViewUtil.RecyclerItemClickListener;
-import awe.devikamehra.shademelange.RecyclerViewUtil.ShadeAdapter;
 import awe.devikamehra.shademelange.RecyclerViewUtil.SimpleGridDecoration;
 
 /**
@@ -41,13 +40,15 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
     private OnDialogButtonClickListener onNeutralButtonClickListener = null;
     private RecyclerView recyclerView;
     private ShadeAdapter shadeAdapter;
-    private int decoration = -1;
+    private DecorationEnum decoration = DecorationEnum.NO_DECORATION;
     private RecyclerView.ItemDecoration itemDecoration = null;
     private boolean showRectangularShell = false;
     private String positiveButtonText = null;
     private String negativeButtonText = null;
     private String neutralButtonText = null;
     private int textColor = Color.BLACK;
+    private SelectionModeEnum selectionMode = SelectionModeEnum.MULTIPLE_SELECTION_MODE;
+    private ArrayList<Integer> selected = new ArrayList<>();
 
     public ShadeMelangeDialog(Context context) {
         super(context);
@@ -107,11 +108,13 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
         }
         recyclerView.setAdapter(shadeAdapter);
 
-        if(decoration == DecorationEnum.SIMPLE_GRID_DECORATION.getDecoration()){
+        shadeAdapter.setSelectionModeEnum(getSelectionMode());
+
+        if(decoration == DecorationEnum.SIMPLE_GRID_DECORATION){
 
             recyclerView.addItemDecoration(new SimpleGridDecoration(context));
 
-        }else if(decoration == DecorationEnum.CUSTOM_DECORATION.getDecoration()){
+        }else if(decoration == DecorationEnum.CUSTOM_DECORATION){
 
             if (itemDecoration != null){
 
@@ -119,11 +122,11 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
 
             }else{
 
-                Log.e("Exception", "No Custom Item Decoration attached. Applying no decoration");
+                throw new RuntimeException("No Custom Item Decoration attached. Try Again");
 
             }
 
-        }else if (decoration == DecorationEnum.NO_DECORATION.getDecoration()){
+        }else if (decoration == DecorationEnum.NO_DECORATION){
 
             recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 
@@ -151,7 +154,6 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
 
     private void selectShade(int position) {
         ImageView shellSelected;
-        shadeAdapter.setSelected(position);
 
         for (int i = 0; i < shadeAdapter.getItemCount(); i++){
             if(recyclerView.getChildAt(i) != null) {
@@ -163,9 +165,46 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
         }
 
         GridLayoutManager layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-        View view = recyclerView.getChildAt(position - layoutManager.findFirstVisibleItemPosition());
-        view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
 
+        if (getSelectionMode() == SelectionModeEnum.SINGLE_SELECTION_MODE) {
+
+            View view = recyclerView.getChildAt(position - layoutManager.findFirstVisibleItemPosition());
+
+            if (shadeAdapter.getSelectedShade() == position){
+                shadeAdapter.setSelectedShade(-1);
+
+                view.findViewById(R.id.shell_selected).setVisibility(View.INVISIBLE);
+
+            }else {
+                shadeAdapter.setSelectedShade(position);
+
+                view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
+
+            }
+
+        }else if(getSelectionMode() == SelectionModeEnum.MULTIPLE_SELECTION_MODE){
+
+            if(selected.contains(position)){
+                selected.remove((Integer) position);
+
+            }else {
+                selected.add(position);
+
+            }
+
+            shadeAdapter.setSelected(selected);
+
+            for(int item: shadeAdapter.getSelected()){
+
+                if(item >= layoutManager.findFirstVisibleItemPosition() && item <= layoutManager.findLastVisibleItemPosition()) {
+
+                    View view = recyclerView.getChildAt(item - layoutManager.findFirstVisibleItemPosition());
+                    view.findViewById(R.id.shell_selected).setVisibility(View.VISIBLE);
+
+                }
+            }
+
+        }
     }
 
     public ShadeMelangeDialog columns(int columns){
@@ -179,8 +218,9 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
             shadeAdapter.notifyDataSetChanged();
         }
         catch (NullPointerException e){
-            Log.d("Exception", "Added Empty set of shades. Try again.");
-            e.printStackTrace();
+
+            throw new RuntimeException( "Added Empty set of shades. Try again.");
+
         }
         catch (Exception e){
             e.printStackTrace();
@@ -194,8 +234,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
             shadeAdapter.notifyItemRangeInserted(0, shades.size());
         }
         catch (NullPointerException e){
-            Log.d("Exception", "Replaced with an empty set of shades. Try again.");
-            e.printStackTrace();
+            throw new RuntimeException("Replaced with an empty set of shades. Try again.");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -214,7 +253,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
     }
 
     public ShadeMelangeDialog applyDecoration(DecorationEnum decorationEnum){
-        this.decoration = decorationEnum.getDecoration();
+        this.decoration = decorationEnum;
         return this;
     }
 
@@ -273,7 +312,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
             }else{
                 setButton(BUTTON_POSITIVE, positiveButtonText, (OnClickListener) null);            }
         }else{
-            Log.d("Positive Button", "Null String passed as positive button text");
+            throw new RuntimeException("Null String passed as positive button text");
         }
         return this;
     }
@@ -297,7 +336,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
                 setButton(BUTTON_NEGATIVE, negativeButtonText, (OnClickListener) null);
             }
         }else{
-            Log.d("Negative Button", "Null String passed as positive button text");
+            throw new RuntimeException("Null String passed as positive button text");
         }
 
         return this;
@@ -322,7 +361,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
                 setButton(BUTTON_NEUTRAL, neutralButtonText, (OnClickListener) null);
             }
         }else{
-            Log.d("Neutral Button", "Null String passed as positive button text");
+            throw new RuntimeException("Null String passed as positive button text");
         }
 
         return this;
@@ -368,5 +407,36 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
         return neutralButtonText;
     }
 
+    public SelectionModeEnum getSelectionMode() {
+        return selectionMode;
+    }
 
+    public ShadeMelangeDialog setSelectionMode(SelectionModeEnum selectionMode) {
+        this.selectionMode = selectionMode;
+        return this;
+    }
+
+    public ArrayList<Shade> getListOfSelectedShades(){
+        if(getSelectionMode() == SelectionModeEnum.MULTIPLE_SELECTION_MODE) {
+            ArrayList<Shade> selectedShades = new ArrayList<>();
+            for (int item : shadeAdapter.getSelected()) {
+                selectedShades.add(shades.get(item));
+            }
+            return selectedShades;
+        }else{
+            throw new RuntimeException("Cannot return list of selected shades in single selection mode. Use getSelectedShade() method.");
+        }
+    }
+
+    public Shade getSelectedShade(){
+        if (getSelectionMode() == SelectionModeEnum.SINGLE_SELECTION_MODE){
+            if(shadeAdapter.getSelectedShade() != -1) {
+                return shades.get(shadeAdapter.getSelectedShade());
+            }else{
+                return null;
+            }
+        } else{
+            throw new RuntimeException("Cannot return a single shade in multi-selection mode. Use getListOfSelectedShades() method.");
+        }
+    }
 }
