@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import awe.devikamehra.shademelange.Enum.DecorationEnum;
 import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
+import awe.devikamehra.shademelange.Enum.ShadeTypeEnum;
 import awe.devikamehra.shademelange.Interface.OnDialogButtonClickListener;
 import awe.devikamehra.shademelange.Interface.OnShadeSelectedListener;
 import awe.devikamehra.shademelange.ShadeMelangeDialog;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 .applyDecoration(DecorationEnum.SIMPLE_GRID_DECORATION)
                 .setTextColor(Color.RED)
                 .columns(2)
+                .setShadeType(ShadeTypeEnum.MATERIAL_SHADES)
                 .showRectangularShell(true)
                 .setSelectionMode(SelectionModeEnum.SINGLE_SELECTION_MODE)
                 .setOnShadeSelectListener(new OnShadeSelectedListener() {

@@ -14,8 +14,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import awe.devikamehra.shademelange.Enum.DecorationEnum;
+import awe.devikamehra.shademelange.Enum.MaterialShadeEnum;
 import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
 import awe.devikamehra.shademelange.Enum.ShadeEnum;
+import awe.devikamehra.shademelange.Enum.ShadeTypeEnum;
 import awe.devikamehra.shademelange.Interface.OnDialogButtonClickListener;
 import awe.devikamehra.shademelange.Interface.OnShadeMelangeDialogCancelListener;
 import awe.devikamehra.shademelange.Interface.OnShadeSelectedListener;
@@ -49,6 +51,7 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
     private int textColor = Color.BLACK;
     private SelectionModeEnum selectionMode = SelectionModeEnum.MULTIPLE_SELECTION_MODE;
     private ArrayList<Integer> selected = new ArrayList<>();
+    private ShadeTypeEnum shadeType = ShadeTypeEnum.NORMAL_SHADES;
 
     public ShadeMelangeDialog(Context context) {
         super(context);
@@ -70,8 +73,18 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
 
         }else {
 
-            for(ShadeEnum shadeEnum : ShadeEnum.values()) {
-                shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+            if (shadeType == ShadeTypeEnum.MATERIAL_SHADES){
+
+                for(MaterialShadeEnum shadeEnum : MaterialShadeEnum.values()) {
+                    shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+                }
+
+            }else {
+
+                for(ShadeEnum shadeEnum : ShadeEnum.values()) {
+                    shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+                }
+
             }
 
             if (moreShades != null){
@@ -151,6 +164,10 @@ public class ShadeMelangeDialog extends AlertDialog implements DialogInterface.O
 
     }
 
+    public ShadeMelangeDialog setShadeType(ShadeTypeEnum shadeType){
+        this.shadeType = shadeType;
+        return this;
+    }
 
     private void selectShade(int position) {
         ImageView shellSelected;

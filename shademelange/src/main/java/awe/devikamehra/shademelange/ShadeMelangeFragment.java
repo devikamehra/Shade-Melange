@@ -16,8 +16,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import awe.devikamehra.shademelange.Enum.DecorationEnum;
+import awe.devikamehra.shademelange.Enum.MaterialShadeEnum;
 import awe.devikamehra.shademelange.Enum.SelectionModeEnum;
 import awe.devikamehra.shademelange.Enum.ShadeEnum;
+import awe.devikamehra.shademelange.Enum.ShadeTypeEnum;
 import awe.devikamehra.shademelange.Interface.OnShadeSelectedListener;
 import awe.devikamehra.shademelange.RecyclerViewUtil.RecyclerItemClickListener;
 import awe.devikamehra.shademelange.RecyclerViewUtil.SimpleGridDecoration;
@@ -45,6 +47,8 @@ public class ShadeMelangeFragment extends Fragment {
     private int textColor = Color.BLACK;
     private SelectionModeEnum selectionMode = SelectionModeEnum.MULTIPLE_SELECTION_MODE;
     private ArrayList<Integer> selected = new ArrayList<>();
+    private ShadeTypeEnum shadeType = ShadeTypeEnum.NORMAL_SHADES;
+
 
     public ShadeMelangeFragment with(Context context){
         this.context = context;
@@ -57,6 +61,11 @@ public class ShadeMelangeFragment extends Fragment {
     }
 
     public ShadeMelangeFragment() {
+    }
+
+    public ShadeMelangeFragment setShadeType(ShadeTypeEnum shadeType){
+        this.shadeType = shadeType;
+        return this;
     }
 
     public ShadeMelangeFragment addMoreShades(ArrayList<Shade> moreShades){
@@ -117,9 +126,20 @@ public class ShadeMelangeFragment extends Fragment {
 
         }else {
 
-            for(ShadeEnum shadeEnum : ShadeEnum.values()) {
-                shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+            if (shadeType == ShadeTypeEnum.MATERIAL_SHADES){
+
+                for(MaterialShadeEnum shadeEnum : MaterialShadeEnum.values()) {
+                    shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+                }
+
+            }else {
+
+                for(ShadeEnum shadeEnum : ShadeEnum.values()) {
+                    shades.add(new Shade(shadeEnum.getShade(), Util.convertToTitleCase(shadeEnum.name())));
+                }
+
             }
+
 
             if (moreShades != null){
 
