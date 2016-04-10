@@ -39,7 +39,7 @@
         </div>
 
         <h1>
-<a id="shade-melange" class="anchor" href="#shade-melange" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shade Melange</h1>
+<a id="shade-melange" class="anchor" href="#shade-melange" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Shade Melange</h1>
 
 <p>Shade Melange is a library that contains a colour palette with a wide range of pre-defined colours with their names. The implementation of the grid has been done using RecyclerView for memory efficient performance. The library consists of two main classes:</p>
 
@@ -51,7 +51,7 @@
 </ul>
 
 <h2>
-<a id="including-in-your-project" class="anchor" href="#including-in-your-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Including in your project</h2>
+<a id="including-in-your-project" class="anchor" href="#including-in-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Including in your project</h2>
 
 <p>Add JitPack to repositories in your project's root <code>build.gradle</code> file:</p>
 
@@ -67,15 +67,15 @@
 
 <pre><code>dependencies {
     ...
-    compile 'com.github.devikamehra:Shade-Melange:v1.0'
+    compile 'com.github.devikamehra:Shade-Melange:v2.0'
 }
 </code></pre>
 
 <h2>
-<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
 <h4>
-<a id="shademelangefragment" class="anchor" href="#shademelangefragment" aria-hidden="true"><span class="octicon octicon-link"></span></a>ShadeMelangeFragment</h4>
+<a id="shademelangefragment" class="anchor" href="#shademelangefragment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ShadeMelangeFragment</h4>
 
 <p>Just like another fragment, this fragment can be attached to your activity by using your default Fragment Manager</p>
 
@@ -88,6 +88,7 @@
                 .applyDecoration(<span class="pl-smi">DecorationEnum</span><span class="pl-c1"><span class="pl-k">.</span>SIMPLE_GRID_DECORATION</span>) <span class="pl-c">// recyclerview item decoration. Can be customized. </span>
                 .showRectangularShell(<span class="pl-c1">true</span>)                             <span class="pl-c">// Shape of shell (Circular or Rectangular)  </span>
                 .setSelectionMode(<span class="pl-smi">SelectionModeEnum</span><span class="pl-c1"><span class="pl-k">.</span>SINGLE_SELECTION_MODE</span>) <span class="pl-c">// To change selection mode from multi to single</span>
+                .setShadeType(<span class="pl-smi">ShadeTypeEnum</span><span class="pl-c1"><span class="pl-k">.</span>MATERIAL_SHADES</span>)              <span class="pl-c">// Defines the type of Shades</span>
                 .setOnShadeSelectListener(<span class="pl-k">new</span> <span class="pl-smi">OnShadeSelectedListener</span>() { <span class="pl-c">// onClickShades Listener </span>
                     <span class="pl-k">@Override</span>
                     <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onShadeSelected</span>(<span class="pl-k">int</span> <span class="pl-v">color</span>, <span class="pl-smi">String</span> <span class="pl-v">name</span>) {
@@ -102,7 +103,7 @@
 </pre></div>
 
 <h4>
-<a id="shademelangedialog" class="anchor" href="#shademelangedialog" aria-hidden="true"><span class="octicon octicon-link"></span></a>ShadeMelangeDialog</h4>
+<a id="shademelangedialog" class="anchor" href="#shademelangedialog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ShadeMelangeDialog</h4>
 
 <p>The Dialog contains a colour palatte which can be customized according to your specifications</p>
 
@@ -130,7 +131,7 @@
 <p>Refer to the sample to appreciate the simplistic implementation of the library.</p>
 
 <h2>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
 
 <p>Copyright 2016 Devika Mehra</p>
 
