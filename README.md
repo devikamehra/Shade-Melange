@@ -26,7 +26,7 @@ Add the dependency to your module's `build.gradle` file:
 ```
 dependencies {
     ...
-    compile 'com.github.devikamehra:Shade-Melange:v1.0'
+    compile 'com.github.devikamehra:Shade-Melange:v2.0'
 }
 ```
 
@@ -46,6 +46,7 @@ ShadeMelangeFragment fragment = new ShadeMelangeFragment();
                 .applyDecoration(DecorationEnum.SIMPLE_GRID_DECORATION) // recyclerview item decoration. Can be customized. 
                 .showRectangularShell(true)                             // Shape of shell (Circular or Rectangular)  
                 .setSelectionMode(SelectionModeEnum.SINGLE_SELECTION_MODE) // To change selection mode from multi to single
+                .setShadeType(ShadeTypeEnum.MATERIAL_SHADES)              // Defines the type of Shades
                 .setOnShadeSelectListener(new OnShadeSelectedListener() { // onClickShades Listener 
                     @Override
                     public void onShadeSelected(int color, String name) {
